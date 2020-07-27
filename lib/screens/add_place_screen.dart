@@ -21,6 +21,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   void _savePlace() {
     if (_titleController.text.isEmpty || _pickedImage == null) {
+      //can add showDialog for error handling
       return;
     }
     Provider.of<GreatPlaces>(context, listen: false)
