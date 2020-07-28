@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/image_input.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../providers/great_places.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 class AddPlaceScreen extends StatefulWidget {
   static const routeName = '/add_place';
@@ -27,6 +30,25 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     Provider.of<GreatPlaces>(context, listen: false)
         .addPlace(_titleController.text, _pickedImage);
     Navigator.of(context).pop();
+  }
+
+  //transferred from image_input.dart
+  File _storedImage;
+  Future<void> _takePicture() async {
+    final picker = ImagePicker();
+    final imageFile = await picker.getImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+    setState(() {
+      _storedImage = File(imageFile.path);
+    });
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile.path);
+    final savedImage =
+    await File(imageFile.path).copy('${appDir.path}/$fileName');
+//    widget.onSelectImage(savedImage); //execute function _selectImage and pass savedImage to it
+    _selectImage(savedImage); //setting the savedImage to _pickedImage; _savePlace needs a _pickedImage to not be null
   }
 
   @override
@@ -54,6 +76,43 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       height: 10,
                     ),
                     ImageInput(_selectImage),
+
+                    //////////////////////////////////////////
+                    Row(
+                      children: [
+                        Container(
+                          width: 150,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.grey),
+                          ),
+                          child: _storedImage != null
+                              ? Image.file(
+                            _storedImage,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          )
+                              : Text(
+                            'No image taken',
+                            textAlign: TextAlign.center,
+                          ),
+                          alignment: Alignment.center,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: FlatButton.icon(
+                            onPressed: _takePicture,
+                            icon: Icon(Icons.camera),
+                            label: Text('Take picture'),
+                            textColor: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    //////////////////////////////////////////
+
                   ],
                 ),
               ),
@@ -74,3 +133,4 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     );
   }
 }
+
