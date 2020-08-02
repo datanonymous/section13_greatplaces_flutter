@@ -40,6 +40,9 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       source: ImageSource.camera,
       maxWidth: 600,
     );
+    if (imageFile == null) {
+      return;
+    }
     setState(() {
       _storedImage = File(imageFile.path);
     });
