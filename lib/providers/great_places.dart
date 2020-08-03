@@ -27,4 +27,8 @@ class GreatPlaces with ChangeNotifier {
     });
   }
 
+  Future<void> fetchAndSetPlaces () async {
+    //todo todo todo, lecture 297
+  }
+
 }
