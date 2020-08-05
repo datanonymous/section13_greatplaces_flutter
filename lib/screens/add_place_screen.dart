@@ -4,6 +4,7 @@ import '../widgets/image_input.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../providers/great_places.dart';
+import '../widgets/location_input.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
@@ -49,9 +50,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     final appDir = await syspaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile.path);
     final savedImage =
-    await File(imageFile.path).copy('${appDir.path}/$fileName');
+        await File(imageFile.path).copy('${appDir.path}/$fileName');
 //    widget.onSelectImage(savedImage); //execute function _selectImage and pass savedImage to it
-    _selectImage(savedImage); //setting the savedImage to _pickedImage; _savePlace needs a _pickedImage to not be null
+    _selectImage(
+        savedImage); //setting the savedImage to _pickedImage; _savePlace needs a _pickedImage to not be null
   }
 
   @override
@@ -75,10 +77,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       ),
                       controller: _titleController,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     ImageInput(_selectImage),
+                    SizedBox(height: 10),
+                    LocationInput(),
 
                     //////////////////////////////////////////
                     Row(
@@ -91,14 +93,14 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                           ),
                           child: _storedImage != null
                               ? Image.file(
-                            _storedImage,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          )
+                                  _storedImage,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                )
                               : Text(
-                            'No image taken',
-                            textAlign: TextAlign.center,
-                          ),
+                                  'No image taken',
+                                  textAlign: TextAlign.center,
+                                ),
                           alignment: Alignment.center,
                         ),
                         SizedBox(
@@ -115,7 +117,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       ],
                     ),
                     //////////////////////////////////////////
-
                   ],
                 ),
               ),
@@ -136,4 +137,3 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     );
   }
 }
-
